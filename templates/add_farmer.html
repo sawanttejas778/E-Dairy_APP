@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Farmer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            background-color: #f8f8f8;
+        }
+        input, select, button {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #0edf57;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #055620;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add Farmer</h1>
+    <form action="/add_farmer" method="POST">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter full name" required>
+
+        <label for="account_no">Account Number</label>
+        <input type="text" id="account_no" name="account_no" placeholder="Enter account number" required>
+
+        <label for="ifsc_code">IFSC Code</label>
+        <input type="text" id="ifsc_code" name="ifsc_code" placeholder="Enter IFSC code" required>
+
+        <label for="bank_name">Bank Name</label>
+        <input type="text" id="bank_name" name="bank_name" placeholder="Enter bank name" required>
+
+        <label for="aadhar_no">Aadhar Number</label>
+        <input type="text" id="aadhar_no" name="aadhar_no" placeholder="Enter Aadhar number" required>
+
+        <label for="ufarmid">UFARM ID</label>
+        <input type="text" id="ufarmid" name="ufarmid" placeholder="Enter UFARM ID" required>
+
+        <label for="mobile">Mobile</label>
+        <input type="text" id="mobile" name="mobile" placeholder="Enter mobile number" required>
+
+        <label for="village">Village</label>
+        <input type="text" id="village" name="village" placeholder="Enter village" required>
+
+        <button type="submit">Add Farmer</button>
+    </form>
+</body>
+</html>

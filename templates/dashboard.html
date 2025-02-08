@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Dairy Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+
+        .menu-toggle {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            width: 40px;
+            position: relative;
+        }
+
+        .menu-toggle .menu-icon {
+            width: 25px;
+            height: 2px;
+            background-color: white;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-toggle .menu-icon::before,
+        .menu-toggle .menu-icon::after {
+            content: '';
+            width: 25px;
+            height: 2px;
+            background-color: white;
+            position: absolute;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-toggle .menu-icon::before {
+            transform: translateY(-8px);
+        }
+
+        .menu-toggle .menu-icon::after {
+            transform: translateY(8px);
+        }
+
+        .menu-toggle.active .menu-icon {
+            background-color: transparent;
+        }
+
+        .menu-toggle.active .menu-icon::before {
+            transform: rotate(45deg);
+        }
+
+        .menu-toggle.active .menu-icon::after {
+            transform: rotate(-45deg);
+        }
+
+        .menu-bar {
+            display: none;
+            flex-direction: column;
+            background-color: #4CAF50;
+            padding: 15px;
+            border-radius: 5px;
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-bar a,
+        .menu-bar form {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            display: block;
+        }
+
+        .menu-bar a:hover,
+        .menu-bar form:hover {
+            background-color: #45a049;
+        }
+
+        .menu-bar form {
+            border: none;
+            cursor: pointer;
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 40px auto;
+            max-width: 900px;
+            padding: 20px;
+        }
+
+        .total-milk-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 380px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .total-milk-container h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .total-milk-container p {
+            font-size: 36px;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 380px;
+            width: 100%;
+        }
+
+        .button-container button {
+            padding: 15px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container button:hover {
+            background-color: #45a049;
+        }
+
+        .footer {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .footer .app-version {
+            font-size: 14px;
+        }
+
+        .flash-message {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .flash-message.success {
+            background-color: #b3f3c1;
+            color: rgb(34, 240, 6);
+        }
+
+        .flash-message.error {
+            background-color: #f2b5b1;
+            color: rgb(253, 7, 7);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>e-Dairy</div>
+        <button class="menu-toggle" aria-label="Toggle Menu" onclick="toggleMenu()">
+            <span class="menu-icon"></span>
+        </button>
+        <div class="menu-bar" id="menuBar">
+            <a href="/add_farmer">Add Farmer</a>
+            <a href="/remove">Remove Farmer</a>
+            <a href="/view">View Farmers</a>
+            <form action="{{ url_for('logout') }}" method="POST">
+                <button type="submit" style="background: none; border: none; color: white; padding: 10px;">Logout</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="dashboard-container">
+        <div class="total-milk-container">
+            <h2>Total Milk Collected Today</h2>
+            <p>{{ total_milk }} Liters</p>
+        </div>
+        <div class="button-container">
+            <button onclick="window.location.href='/dashboard/milk_collection'">Milk Collection</button>
+            <button onclick="window.location.href='/dashboard/billing'">Billing</button>
+            <button onclick="window.location.href='/dashboard/Banking'">Dairy Banking</button>
+            <button onclick="window.location.href='/dashboard/Banking/transaction'">Banking History</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="app-version">e-Dairy - App Version 1.0</div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const menuBar = document.getElementById('menuBar');
+            const toggleButton = document.querySelector('.menu-toggle');
+            menuBar.style.display = menuBar.style.display === 'flex' ? 'none' : 'flex';
+            toggleButton.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

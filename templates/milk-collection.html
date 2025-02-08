@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milk Collection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Flash Messages Container -->
+    <div class="flash-container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for message in messages %}
+                        <li class="flash-message">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="collection-container">
+        <h1>Milk Collection</h1>
+        <form method="POST">
+            <input type="number" name="farmer_id" placeholder="Farmer ID (Integer)" required>
+            <input type="number" step="0.01" name="snf" placeholder="SNF (Float)" required>
+            <input type="number" step="0.01" name="fat" placeholder="Fat (Float)" required>
+            <input type="number" step="0.01" name="milk" placeholder="Milk (Liters - Float)" required>
+            
+            <!-- Animal Type Dropdown -->
+            <select name="animal_type" required>
+                <option value="">Select Animal Type</option>
+                <option value="Cow">Cow</option>
+                <option value="Buffelo">Buffelo</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <!-- Day and Night Selection -->
+            <div class="day-night-buttons">
+                <button type="button" id="day-button" onclick="selectTimeOfDay(1)">Day</button>
+                <button type="button" id="night-button" onclick="selectTimeOfDay(0)">Night</button>
+            </div>
+            
+            <input type="hidden" name="collection_time_of_day" id="collection-time-of-day" required>
+
+            <button type="submit">Submit</button>
+            <button onclick="window.location.href='/dashboard/milk_collection/wrong_entry'">Wrong Entry?</button>
+        </form>
+    </div>
+
+    <div class="entries-container">
+        <h2>Last 10 Entries</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Collection ID</th>
+                    <th>Farmer ID</th>
+                    <th>Animal Type</th>
+                    <th>SNF</th>
+                    <th>Fat</th>
+                    <th>Milk</th>
+                    <th>Total Rate</th>
+                    <th>Collection Time</th>
+                    <th>Time of Day</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in last_entries %}
+                <tr>
+                    <td>{{ entry[0] }}</td>
+                    <td>{{ entry[1] }}</td>
+                    <td>{{ entry[2] }}</td>
+                    <td>{{ entry[3] }}</td>
+                    <td>{{ entry[4] }}</td>
+                    <td>{{ entry[5] }}</td> 
+                    <td>{{ entry[6] }}</td> 
+                    <td>{{ entry[7] }}</td> 
+                    <td>{{ entry[8] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

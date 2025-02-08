@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Remove Farmer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+        h2 {
+            color: #333;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: red;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: darkred;
+        }
+        .message {
+            color: green;
+            margin-top: 10px;
+        }
+        .warning {
+            color: orange;
+        }
+    </style>
+
+    <script>
+        function confirmDeletion(event) {
+            let farmerId = document.getElementById("farmer_id").value;
+            if (!farmerId) {
+                alert("Please enter a Farmer ID.");
+                event.preventDefault();
+                return false;
+            }
+            let confirmation = confirm("This farmer has linked records. Are you sure you want to delete?");
+            if (!confirmation) {
+                event.preventDefault();
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Remove Farmer</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p class="message {{ category }}">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('remove_farmer') }}" method="post" onsubmit="return confirmDeletion(event);">
+            <label for="farmer_id">Enter Farmer ID:</label>
+            <input type="text" name="farmer_id" id="farmer_id" required>
+            <button type="submit">Delete</button>
+        </form>
+    </div>
+</body>
+</html>

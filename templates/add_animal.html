@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Animals</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            background-color: #f8f8f8;
+        }
+        input, select, button {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #0edf57;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #055620;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add Animal</h1>
+    <form action="/add_animal" method="POST">
+        <label for="farmer_id">Farmer ID</label>
+        <input type="text" id="farmer_id" name="farmer_id" placeholder="Enter Farmer ID" required>
+
+        <label for="animal_type">Animal Type</label>
+        <input type="text" id="animal_type" name="animal_type" placeholder="cow/buffelo/other" required>
+
+        <label for="cow_type">Cow Type</label>
+        <input type="text" id="cow_type" name="cow_type" placeholder="Cow type" required>
+
+        <label for="tag_no">Tag Number</label>
+        <input type="text" id="tag_no" name="tag_no" placeholder="Enter Tag number" required>
+
+        <label for="uanimalid">Unique Animal ID</label>
+        <input type="text" id="uanimalid" name="uanimalid" placeholder="Enter Unique animal ID" required>
+
+        <button type="submit">Add Animal</button>
+    </form>
+</body>
+</html>
