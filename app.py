@@ -313,6 +313,7 @@ def add_animal():
     return render_template('add_animal.html')
 
 
+
 @app.route('/dashboard/billing', methods=['GET', 'POST'])
 @login_required
 def bill_page():
@@ -332,22 +333,22 @@ def bill_page():
                 farmer_id,
                 animal_type,
                 DATE(collection_time) AS collection_date,
-                MAX(CASE WHEN collection_time_of_day = 1 THEN snf ELSE NULL END) AS day_snf,
-                MAX(CASE WHEN collection_time_of_day = 1 THEN fat ELSE NULL END) AS day_fat,
-                MAX(CASE WHEN collection_time_of_day = 1 THEN milk ELSE NULL END) AS day_milk,
-                MAX(CASE WHEN collection_time_of_day = 1 THEN rate ELSE NULL END) AS day_rate,
-                MAX(CASE WHEN collection_time_of_day = 1 THEN total_rate ELSE NULL END) AS day_total_rate,
-                MAX(CASE WHEN collection_time_of_day = 0 THEN snf ELSE NULL END) AS night_snf,
-                MAX(CASE WHEN collection_time_of_day = 0 THEN fat ELSE NULL END) AS night_fat,
-                MAX(CASE WHEN collection_time_of_day = 0 THEN milk ELSE NULL END) AS night_milk,
-                MAX(CASE WHEN collection_time_of_day = 0 THEN rate ELSE NULL END) AS night_rate,
-                MAX(CASE WHEN collection_time_of_day = 0 THEN total_rate ELSE NULL END) AS night_total_rate,
-                SUM(total_rate) AS total
+                COALESCE(MAX(CASE WHEN collection_time_of_day = 1 THEN snf ELSE NULL END), 0) AS day_snf,
+                COALESCE(MAX(CASE WHEN collection_time_of_day = 1 THEN fat ELSE NULL END), 0) AS day_fat,
+                COALESCE(MAX(CASE WHEN collection_time_of_day = 1 THEN milk ELSE NULL END), 0) AS day_milk,
+                COALESCE(MAX(CASE WHEN collection_time_of_day = 1 THEN rate ELSE NULL END), 0) AS day_rate,
+                COALESCE(MAX(CASE WHEN collection_time_of_day = 1 THEN total_rate ELSE NULL END), 0) AS day_total_rate,
+                COALESCE(MAX(CASE WHEN collection_time_of_day = 0 THEN snf ELSE NULL END), 0) AS night_snf,
+                COALESCE(MAX(CASE WHEN collection_time_of_day = 0 THEN fat ELSE NULL END), 0) AS night_fat,
+                COALESCE(MAX(CASE WHEN collection_time_of_day = 0 THEN milk ELSE NULL END), 0) AS night_milk,
+                COALESCE(MAX(CASE WHEN collection_time_of_day = 0 THEN rate ELSE NULL END), 0) AS night_rate,
+                COALESCE(MAX(CASE WHEN collection_time_of_day = 0 THEN total_rate ELSE NULL END), 0) AS night_total_rate,
+                COALESCE(SUM(total_rate), 0) AS total
             FROM 
                 milk_collection
             WHERE 
-                farmer_id = %s AND email = %s AND 
-                DATE(collection_time) BETWEEN %s AND %s
+                farmer_id = %s AND email = %s 
+                AND DATE(collection_time) BETWEEN %s AND %s
             GROUP BY 
                 farmer_id, animal_type, DATE(collection_time)
             ORDER BY 
@@ -357,13 +358,16 @@ def bill_page():
             cur = mysql.connection.cursor()
             cur.execute(query, (farmer_id, email, start_date, end_date))
             results = cur.fetchall()
-            total = results[0][13]
-        
+
+            # Handle empty results safely
+            total = round(results[0][13] if results else 0,2)
+
             cur.close()
-        except Exception as e:
-            print(f"Error: {e}")
-            
+
+        except exception as e:
+            flash("Danger")
     return render_template('billing.html', results=results, total=total)
+
 
 
 
