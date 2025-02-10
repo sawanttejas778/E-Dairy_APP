@@ -354,18 +354,27 @@ def bill_page():
             ORDER BY 
                 collection_date;
             """
-
+            query2 = """
+            select sum(total_rate) as total
+            FROM 
+                milk_collection
+            WHERE 
+                farmer_id = %s AND email = %s 
+                AND DATE(collection_time) BETWEEN %s AND %s
+            """
             cur = mysql.connection.cursor()
             cur.execute(query, (farmer_id, email, start_date, end_date))
             results = cur.fetchall()
-
-            # Handle empty results safely
-            total = round(results[0][13] if results else 0,2)
-
+            cur.execute(query2, (farmer_id, email, start_date, end_date))
+            tres = cur.fetchone()
+            if tres==None:
+                total = 0
+            else: 
+                total = round(tres[0],2)
             cur.close()
 
-        except exception as e:
-            flash("Danger")
+        except Exception as e:
+            flash(f"Error: {e}", "danger")
     return render_template('billing.html', results=results, total=total)
 
 
