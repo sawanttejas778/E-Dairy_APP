@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for, flash, session
 from flask_wtf import FlaskForm 
 import bcrypt
+import os
 import MySQLdb.cursors
 from wtforms import StringField, PasswordField,SubmitField
 from wtforms.validators import DataRequired, Email , ValidationError
@@ -156,7 +157,9 @@ def milk_collection():
         collection_time_of_day = request.form['collection_time_of_day']
 
         try:
-            dataframe = pd.read_csv(r"D:\Project\SQL_Project\Dairy\rates.csv")
+            BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the script
+            RATES_CSV_PATH = os.path.join(BASE_DIR, "rates.csv")  # Construct a relative path
+            dataframe = pd.read_csv(RATES_CSV_PATH)
             column_name = str(snf)  # Assuming snf corresponds to the column name in the CSV
             fat_value = float(fat)
             milk_type = animal_type.upper()
