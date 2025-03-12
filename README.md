@@ -1,6 +1,5 @@
 # E-Dairy App
-# visit this site on 
-[dairypp](https://www.dairyapp3412.pythonanywhere.com/login)
+# visit this site on [dairypp](https://www.dairyapp3412.pythonanywhere.com/login)
 The **E-Dairy App** is a simple dairy management application built using Flask, Python, HTML, CSS, and MySQL. This app helps manage daily milk collection records by providing features like adding, viewing, updating customer data, calculating milk rates, and generating total amounts from CSV files.
 
 ---
